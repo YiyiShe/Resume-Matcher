@@ -1,78 +1,134 @@
 'use client';
 
-import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import LayoutGrid from 'lucide-react/dist/esm/icons/layout-grid';
+import FileText from 'lucide-react/dist/esm/icons/file-text';
+import Target from 'lucide-react/dist/esm/icons/target';
+import ListChecks from 'lucide-react/dist/esm/icons/list-checks';
+import Settings from 'lucide-react/dist/esm/icons/settings';
+import Sparkles from 'lucide-react/dist/esm/icons/sparkles';
+import ArrowUpRight from 'lucide-react/dist/esm/icons/arrow-up-right';
 import { useTranslations } from '@/lib/i18n';
 
 export const SwissGrid = ({ children }: { children: React.ReactNode }) => {
   const { t } = useTranslations();
 
   return (
-    // 1. Outer Wrapper: Fixed height with grid background
-    <div
-      className="h-screen w-full flex justify-center items-start py-12 px-4 md:px-8 overflow-hidden bg-background"
-      style={{
-        backgroundImage:
-          'linear-gradient(rgba(29, 78, 216, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(29, 78, 216, 0.1) 1px, transparent 1px)',
-        backgroundSize: '40px 40px',
-      }}
-    >
-      {/* 2. The Main Container: Sharp black borders, creating the "Canvas" */}
-      <div className="w-full max-w-[86rem] max-h-full border border-black bg-background shadow-sw-lg flex flex-col overflow-hidden">
-        {/* Header Section - stays above hovered cards */}
-        <div className="border-b border-black p-8 md:p-12 shrink-0 bg-background relative z-30">
-          <h1 className="font-serif text-5xl md:text-7xl text-black tracking-tight leading-[0.95] uppercase">
-            {t('nav.dashboard')}
-          </h1>
-          <p className="mt-6 text-sm font-mono text-blue-700 uppercase tracking-wide max-w-md font-bold">
-            {'// '}
-            {t('dashboard.selectModule')}
-          </p>
+    <div className="workspace-shell min-h-screen w-full">
+      <aside className="workspace-sidebar" aria-label="Yilink workspace navigation">
+        <Link href="/dashboard" className="workspace-brand">
+          <span className="workspace-brand-mark">
+            <Image src="/logo.svg" alt="Yilink" width={28} height={28} />
+          </span>
+          <span>
+            <strong>Yilink</strong>
+            <small>奕链接</small>
+          </span>
+        </Link>
+
+        <div className="workspace-nav-label">{t('dashboard.selectModule')}</div>
+        <nav className="workspace-nav">
+          <Link href="/dashboard" className="workspace-nav-link is-active" aria-current="page">
+            <LayoutGrid aria-hidden="true" />
+            <span>{t('nav.dashboard')}</span>
+          </Link>
+          <Link href="/resume-wizard" className="workspace-nav-link">
+            <FileText aria-hidden="true" />
+            <span>{t('nav.builder')}</span>
+          </Link>
+          <Link href="/tailor" className="workspace-nav-link">
+            <Target aria-hidden="true" />
+            <span>{t('nav.tailor')}</span>
+          </Link>
+          <Link href="/tracker" className="workspace-nav-link">
+            <ListChecks aria-hidden="true" />
+            <span>{t('nav.applicationTracker')}</span>
+          </Link>
+        </nav>
+
+        <div className="workspace-sidebar-tip">
+          <Sparkles aria-hidden="true" />
+          <span>{t('dashboard.createNew')}</span>
+          <strong>{t('dashboard.createResume')}</strong>
+          <Link href="/resume-wizard">
+            {t('nav.builder')}
+            <ArrowUpRight aria-hidden="true" />
+          </Link>
         </div>
 
-        {/* Content Grid - Scrollable area with NO padding.
-            @container makes the card grid respond to the container's actual
-            width, not the viewport. The Swiss frame is max-w-86rem so on
-            ultra-wide screens the cards no longer over-stretch. */}
-        <div className="@container flex-1 overflow-y-auto overflow-x-hidden relative z-10">
-          <div className="p-[1.5px]">
-            <div className="grid grid-cols-1 @2xl:grid-cols-2 @3xl:grid-cols-3 @5xl:grid-cols-5 bg-black gap-[1px] border-b border-black">
-              {children}
+        <div className="workspace-sidebar-footer">
+          <Link href="/settings" className="workspace-settings-link">
+            <Settings aria-hidden="true" />
+            <span>{t('nav.settings')}</span>
+          </Link>
+          <span className="workspace-footer-brand">Yilink · 奕链接</span>
+        </div>
+      </aside>
+
+      <main className="workspace-main">
+        <header className="workspace-topbar">
+          <div>
+            <div className="workspace-breadcrumb">
+              Yilink <span>/</span> {t('nav.dashboard')}
             </div>
+            <h1>{t('nav.dashboard')}</h1>
+            <p>{t('dashboard.subtitle')}</p>
           </div>
-        </div>
+          <Link href="/resume-wizard" className="workspace-topbar-cta">
+            <span>+</span>
+            {t('dashboard.createNew')}
+          </Link>
+        </header>
 
-        {/* Footer - stays above hovered cards */}
-        <div className="p-4 bg-background flex justify-between items-center font-mono text-xs text-blue-700 border-t border-black shrink-0 relative z-30">
-          <div className="flex items-center gap-2">
-            <Image
-              src="/logo.svg"
-              alt="Resume Matcher"
-              width={20}
-              height={20}
-              className="w-5 h-5"
-            />
-            <span className="uppercase font-bold">Resume Matcher</span>
+        <section className="workspace-start-panel" aria-labelledby="workspace-start-title">
+          <div className="workspace-start-copy">
+            <span className="workspace-eyebrow">YILINK WORKSPACE · 奕链接工作区</span>
+            <h2 id="workspace-start-title">{t('dashboard.selectModule')}</h2>
+            <p>{t('dashboard.subtitle')}</p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="workspace-start-actions">
             <Link
-              href="/tracker"
-              className="inline-flex items-center justify-center gap-2 bg-background text-black border border-black px-6 py-2 uppercase font-bold tracking-wide shadow-sw-sm hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all min-w-[140px] text-center"
+              href="/resume-wizard"
+              className="workspace-action-card workspace-action-card-primary"
             >
-              <LayoutGrid className="w-4 h-4" />
-              {t('nav.applicationTracker')}
+              <span className="workspace-action-index">01</span>
+              <FileText aria-hidden="true" />
+              <strong>{t('nav.builder')}</strong>
+              <span>{t('dashboard.createNew')}</span>
+              <ArrowUpRight aria-hidden="true" />
             </Link>
-            <Link
-              href="/settings"
-              className="bg-warning text-black border border-black px-6 py-2 uppercase font-bold tracking-wide shadow-sw-sm hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-none transition-all min-w-[140px] text-center"
-            >
-              {t('nav.settings')}
+            <Link href="/tailor" className="workspace-action-card workspace-action-card-secondary">
+              <span className="workspace-action-index">02</span>
+              <Target aria-hidden="true" />
+              <strong>{t('nav.tailor')}</strong>
+              <span>{t('dashboard.tailorResume')}</span>
+              <ArrowUpRight aria-hidden="true" />
+            </Link>
+            <Link href="/tracker" className="workspace-action-card workspace-action-card-tertiary">
+              <span className="workspace-action-index">03</span>
+              <ListChecks aria-hidden="true" />
+              <strong>{t('nav.applicationTracker')}</strong>
+              <span>{t('dashboard.subtitle')}</span>
+              <ArrowUpRight aria-hidden="true" />
             </Link>
           </div>
-        </div>
-      </div>
+        </section>
+
+        <section className="workspace-resumes" aria-labelledby="workspace-resumes-title">
+          <div className="workspace-section-heading">
+            <div>
+              <span className="workspace-eyebrow">{t('dashboard.lastModified')}</span>
+              <h2 id="workspace-resumes-title">{t('dashboard.myResumes')}</h2>
+            </div>
+            <Link href="/resume-wizard" className="workspace-section-link">
+              {t('dashboard.createNew')}
+              <ArrowUpRight aria-hidden="true" />
+            </Link>
+          </div>
+          <div className="workspace-card-grid">{children}</div>
+        </section>
+      </main>
     </div>
   );
 };
