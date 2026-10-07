@@ -14,6 +14,14 @@ BOLD='\033[1m'
 FRONTEND_PORT="3000"
 BACKEND_PORT="8000"
 
+# Keep the two long-running processes inside small hosted instances from
+# competing for the entire memory limit. The limits can still be overridden by
+# the hosting environment when a larger instance is used.
+export MALLOC_ARENA_MAX="${MALLOC_ARENA_MAX:-2}"
+if [[ "${NODE_OPTIONS:-}" != *"--max-old-space-size="* ]]; then
+    export NODE_OPTIONS="${NODE_OPTIONS:+${NODE_OPTIONS} }--max-old-space-size=${NODE_MAX_OLD_SPACE_SIZE:-192}"
+fi
+
 # Print banner
 print_banner() {
     echo -e "${CYAN}"
