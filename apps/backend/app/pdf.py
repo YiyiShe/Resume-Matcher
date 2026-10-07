@@ -356,8 +356,16 @@ def _find_chromium_executable() -> Optional[str]:
 
 
 async def _launch_browser(playwright: Playwright) -> Browser:
+    # Render's smallest instances have limited memory. These flags avoid
+    # loading optional Chromium services that are not needed for PDF export.
+    chromium_args = [
+        "--disable-background-networking",
+        "--disable-extensions",
+        "--disable-gpu",
+        "--disable-dev-shm-usage",
+    ]
     try:
-        return await playwright.chromium.launch()
+        return await playwright.chromium.launch(args=chromium_args)
     except PlaywrightError as e:
         if "Executable doesn't exist" not in str(e):
             raise
@@ -367,7 +375,10 @@ async def _launch_browser(playwright: Playwright) -> Browser:
                 "Playwright browser executable is missing, and no system Chrome/Edge "
                 "installation was found. Install Playwright browsers or install Chrome/Edge."
             ) from e
-        return await playwright.chromium.launch(executable_path=fallback_executable)
+        return await playwright.chromium.launch(
+            executable_path=fallback_executable,
+            args=chromium_args,
+        )
 
 
 async def _render_page_to_pdf(
