@@ -539,14 +539,6 @@ export default function DashboardPage() {
 
   const atMasterLimit = 1 + otherMasters.length >= MAX_MASTER_RESUMES;
   const showAddTrackTile = Boolean(masterResumeId) && !atMasterLimit && isLlmConfigured;
-  const totalCards =
-    1 + otherMasters.length + tailoredResumes.length + 1 + (showAddTrackTile ? 1 : 0);
-  const fillerCount = Math.max(0, (5 - (totalCards % 5)) % 5);
-  const extraFillerCount = 5;
-  // Use Tailwind classes for fillers now that we have them in config or use specific hex if needed
-  // Using the hex values from before to maintain exact look, or we could map them to variants
-  const fillerPalette = ['bg-secondary', 'bg-[#D8D8D2]', 'bg-[#CFCFC7]', 'bg-[#E0E0D8]'];
-
   const listErrorAlert = listError ? (
     <div
       role="alert"
@@ -857,25 +849,6 @@ export default function DashboardPage() {
             </p>
           </div>
         </Card>
-
-        {/* 6. Fillers */}
-        {Array.from({ length: fillerCount }).map((_, index) => (
-          <Card
-            key={`filler-${index}`}
-            variant="ghost"
-            noPadding
-            className="hidden md:block bg-canvas aspect-square h-full opacity-50 pointer-events-none"
-          />
-        ))}
-
-        {Array.from({ length: extraFillerCount }).map((_, index) => (
-          <Card
-            key={`extra-filler-${index}`}
-            variant="ghost"
-            noPadding
-            className={`hidden md:block ${fillerPalette[index % fillerPalette.length]} aspect-square h-full opacity-70 pointer-events-none`}
-          />
-        ))}
 
         <MasterResumeChoiceDialog
           open={isMasterChoiceDialogOpen}
